@@ -58,10 +58,22 @@ async function autoLoginAndDownload() {
   try {
     const page = await browser.newPage();
     
-    // Download-Verhalten konfigurieren
-    await page._client.send('Page.setDownloadBehavior', {
+    // Konfiguriere Download-Verhalten - moderne Methode
+    await page._client?.send?.('Page.setDownloadBehavior', {
       behavior: 'allow',
       downloadPath: DOWNLOAD_DIR
+    }).catch(() => {
+      // Falls die Methode nicht existiert, verwende die alternative Methode
+      console.log('Verwende alternative Download-Konfiguration...');
+      const client = page.target().createCDPSession?.();
+      if (client) {
+        return client.send('Page.setDownloadBehavior', {
+          behavior: 'allow',
+          downloadPath: DOWNLOAD_DIR
+        });
+      }
+      // Wenn keine der Methoden funktioniert, fahre trotzdem fort
+      console.log('Download-Konfiguration konnte nicht gesetzt werden, fahre fort...');
     });
     
     // Mehr Zeit für Operationen geben
