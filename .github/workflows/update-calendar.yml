@@ -21,17 +21,11 @@ jobs:
       - name: Installiere Abhängigkeiten
         run: npm ci
 
-      - name: Stelle sicher, dass Chromium installiert ist
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser
-
-      - name: Aktualisiere Kalender
-        env:
-          SCHULPORTAL_USERNAME: ${{ secrets.SCHULPORTAL_USERNAME }}
-          SCHULPORTAL_PASSWORD: ${{ secrets.SCHULPORTAL_PASSWORD }}
+      - name: Aktualisiere Kalender aus CSV
         run: node update-schedule.js
-
+        env:
+          CSV_FILE: ${{ github.workspace }}/SPH-Schulkalender-Khalaf.csv
+      
       - name: Commite geänderte schedule.json
         run: |
           git config --local user.email "action@github.com"
