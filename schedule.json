@@ -1,0 +1,47 @@
+{
+  "Montag": {
+    "message": "Heute laut Stundenplan:",
+    "subjects": [
+      "Mathe: Wiederholung für die Klausur",
+      "Deutsch: Hausaufgaben abgeben"
+    ]
+  },
+  "Dienstag": {
+    "message": "Mathe Klausur",
+    "subjects": [
+      "Themen: Integral- und Differentialrechnung",
+      "Mitbringen: Taschenrechner und Geodreieck"
+    ]
+  },
+  "Mittwoch": {
+    "message": "Deutsch Klausur",
+    "subjects": [
+      "Themen: Literaturanalyse",
+      "Mitbringen: Deutschbuch"
+    ]
+  },
+  "Donnerstag": {
+    "message": "Heute laut Stundenplan:",
+    "subjects": [
+      "TLS: Präsentation vorbereiten",
+      "Englisch: Vokabeltest"
+    ]
+  },
+  "Freitag": {
+    "message": "Heute laut Stundenplan:",
+    "subjects": [
+      "Sport: Bitte Sportkleidung mitbringen",
+      "Informatik: Projektabgabe"
+    ]
+  },
+  "Samstag": {
+    "message": "Wochenende! Keine Schule",
+    "subjects": []
+  },
+  "Sonntag": {
+    "message": "Wochenende! Morgen wieder Schule",
+    "subjects": [
+      "Denk an die Hausaufgaben für morgen!"
+    ]
+  }
+} 

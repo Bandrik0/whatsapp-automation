@@ -1,0 +1,38 @@
+name: Tägliche WhatsApp-Nachricht
+
+on:
+  schedule:
+    # Jeden Tag um 7:00 Uhr (UTC+2 -> 5:00 UTC)
+    - cron: '0 5 * * *'
+  workflow_dispatch:  # Ermöglicht manuelle Auslösung im GitHub-Interface
+
+jobs:
+  send-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Installiere Abhängigkeiten
+        run: npm ci
+
+      - name: Stelle sicher, dass Chromium installiert ist
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
+      
+      - name: Lade WhatsApp-Session
+        uses: actions/cache@v2
+        with:
+          path: .wwebjs_auth
+          key: ${{ runner.os }}-wwebjs-auth
+
+      - name: Sende Nachricht
+        env:
+          SEND_MESSAGE: 'true'
+        run: node index.js 
