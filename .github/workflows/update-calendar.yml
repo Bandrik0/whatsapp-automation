@@ -6,6 +6,10 @@ on:
     - cron: '0 2 * * *'
   workflow_dispatch:  # Ermöglicht manuelle Auslösung
 
+# Explizite Schreibberechtigung für das Repository hinzufügen
+permissions:
+  contents: write
+
 jobs:
   update-calendar:
     runs-on: ubuntu-latest
