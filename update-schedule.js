@@ -121,7 +121,32 @@ async function autoLoginAndDownload() {
         console.log('Gefunden: Alternatives Login-Formular');
         await page.type('input[name="user"]', USERNAME);
         await page.type('input[name="password"]', PASSWORD);
-        await page.click('input[type="submit"]');
+        
+        // Versuche verschiedene Submit-Button-Selektoren
+        const submitSelectors = [
+          'input[type="submit"]',
+          'button[type="submit"]',
+          'button.btn-login',
+          'button.login-button',
+          'button:contains("Anmelden")',
+          'input.btn',
+          '.btn-primary'
+        ];
+        
+        let buttonClicked = false;
+        for (const selector of submitSelectors) {
+          if (await page.$(selector)) {
+            console.log(`Submit-Button gefunden: ${selector}`);
+            await page.click(selector);
+            buttonClicked = true;
+            break;
+          }
+        }
+        
+        if (!buttonClicked) {
+          console.log('Kein Submit-Button gefunden, versuche Enter zu drücken...');
+          await page.keyboard.press('Enter');
+        }
       }
       // Vierter Versuch: Suche nach iFrame
       else {
@@ -149,7 +174,33 @@ async function autoLoginAndDownload() {
           } else {
             await loginFrame.type('input[name="user"]', USERNAME);
             await loginFrame.type('input[name="password"]', PASSWORD);
-            await loginFrame.click('input[type="submit"]');
+            
+            // Versuche verschiedene Submit-Button-Selektoren im iFrame
+            const submitSelectors = [
+              'input[type="submit"]',
+              'button[type="submit"]',
+              'button.btn-login',
+              'button.login-button',
+              'button:contains("Anmelden")',
+              'input.btn',
+              '.btn-primary'
+            ];
+            
+            let buttonClicked = false;
+            for (const selector of submitSelectors) {
+              if (await loginFrame.$(selector)) {
+                console.log(`Submit-Button im iFrame gefunden: ${selector}`);
+                await loginFrame.click(selector);
+                buttonClicked = true;
+                break;
+              }
+            }
+            
+            if (!buttonClicked) {
+              console.log('Kein Submit-Button im iFrame gefunden, versuche Enter zu drücken...');
+              await loginFrame.focus('input[name="password"]');
+              await page.keyboard.press('Enter');
+            }
           }
         } else {
           console.log('Kein Login-Formular gefunden, mache Screenshot...');
