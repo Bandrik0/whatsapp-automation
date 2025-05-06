@@ -2,36 +2,39 @@
   "Montag": {
     "message": "Heute laut Stundenplan:",
     "subjects": [
-      "Mathe: Wiederholung für die Klausur",
-      "Deutsch: Hausaufgaben abgeben"
+      "19.05.2025: Lernfeld 05 Klausur (8:00-13:00)",
+      "Bitte alle Unterlagen mitbringen"
     ]
   },
   "Dienstag": {
-    "message": "Mathe Klausur",
+    "message": "Klausuren im Überblick:",
     "subjects": [
-      "Themen: Integral- und Differentialrechnung",
-      "Mitbringen: Taschenrechner und Geodreieck"
+      "25.02.2025: Lernfeld 01 Klausur (11:30-13:00)",
+      "04.03.2025: Lernfeld 01 Klausur (11:30-13:00)",
+      "13.05.2025: Deutschklausur (8:00-9:30) in R 34",
+      "27.05.2025: Lernfeld 01 Klausur (11:30-13:00)"
     ]
   },
   "Mittwoch": {
-    "message": "Deutsch Klausur",
+    "message": "Klausuren im Überblick:",
     "subjects": [
-      "Themen: Literaturanalyse",
-      "Mitbringen: Deutschbuch"
+      "30.04.2025: Lernfeld 07 Klausur (11:30-15:00)",
+      "Bitte Taschenrechner und Formelsammlung mitbringen"
     ]
   },
   "Donnerstag": {
     "message": "Heute laut Stundenplan:",
     "subjects": [
-      "TLS: Präsentation vorbereiten",
-      "Englisch: Vokabeltest"
+      "Feiertage: 01.05.2025 (Tag der Arbeit), 29.05.2025 (Christi Himmelfahrt), 19.06.2025 (Fronleichnam)",
+      "Bitte Hausaufgaben für Freitag vorbereiten"
     ]
   },
   "Freitag": {
-    "message": "Heute laut Stundenplan:",
+    "message": "Klausuren im Überblick:",
     "subjects": [
-      "Sport: Bitte Sportkleidung mitbringen",
-      "Informatik: Projektabgabe"
+      "21.03.2025: Lernfeld 02 Klausur (9:45-11:15)",
+      "16.05.2025: Lernfeld 02 Klausur (9:45-11:15)",
+      "23.05.2025: Lernfeld 02 Klausur (9:45-11:15)"
     ]
   },
   "Samstag": {
@@ -41,7 +44,8 @@
   "Sonntag": {
     "message": "Wochenende! Morgen wieder Schule",
     "subjects": [
-      "Denk an die Hausaufgaben für morgen!"
+      "Denk an die Hausaufgaben für morgen!",
+      "Ferien & freie Tage: 20.04.2025 (Ostersonntag), 08.06.2025 (Pfingstsonntag)"
     ]
   }
 } 
