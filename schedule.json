@@ -1,38 +1,34 @@
 {
   "Montag": {
-    "message": "Heute laut Stundenplan:",
+    "message": "Wichtige Termine im Mai:",
     "subjects": [
       "19.05.2025: Lernfeld 05 Klausur (8:00-13:00)",
-      "Bitte alle Unterlagen mitbringen"
+      "09.06.2025: Pfingstmontag (frei!)"
     ]
   },
   "Dienstag": {
-    "message": "Klausuren im Überblick:",
+    "message": "Wichtige Termine nach dem 6. Mai:",
     "subjects": [
-      "25.02.2025: Lernfeld 01 Klausur (11:30-13:00)",
-      "04.03.2025: Lernfeld 01 Klausur (11:30-13:00)",
       "13.05.2025: Deutschklausur (8:00-9:30) in R 34",
       "27.05.2025: Lernfeld 01 Klausur (11:30-13:00)"
     ]
   },
   "Mittwoch": {
-    "message": "Klausuren im Überblick:",
+    "message": "Keine Termine im Mai",
     "subjects": [
-      "30.04.2025: Lernfeld 07 Klausur (11:30-15:00)",
-      "Bitte Taschenrechner und Formelsammlung mitbringen"
+      "Nächste Woche steht keine Klausur an"
     ]
   },
   "Donnerstag": {
-    "message": "Heute laut Stundenplan:",
+    "message": "Feiertage nach dem 6. Mai:",
     "subjects": [
-      "Feiertage: 01.05.2025 (Tag der Arbeit), 29.05.2025 (Christi Himmelfahrt), 19.06.2025 (Fronleichnam)",
-      "Bitte Hausaufgaben für Freitag vorbereiten"
+      "29.05.2025: Christi Himmelfahrt (frei!)",
+      "19.06.2025: Fronleichnam (frei!)"
     ]
   },
   "Freitag": {
-    "message": "Klausuren im Überblick:",
+    "message": "Klausuren im Mai:",
     "subjects": [
-      "21.03.2025: Lernfeld 02 Klausur (9:45-11:15)",
       "16.05.2025: Lernfeld 02 Klausur (9:45-11:15)",
       "23.05.2025: Lernfeld 02 Klausur (9:45-11:15)"
     ]
@@ -44,8 +40,8 @@
   "Sonntag": {
     "message": "Wochenende! Morgen wieder Schule",
     "subjects": [
-      "Denk an die Hausaufgaben für morgen!",
-      "Ferien & freie Tage: 20.04.2025 (Ostersonntag), 08.06.2025 (Pfingstsonntag)"
+      "08.06.2025: Pfingstsonntag (frei!)",
+      "Denk an die Hausaufgaben für morgen!"
     ]
   }
 } 
