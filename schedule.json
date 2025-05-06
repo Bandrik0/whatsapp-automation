@@ -2,33 +2,71 @@
   "Montag": {
     "message": "📅 *TERMINÜBERSICHT FÜR DIESE WOCHE* 📅",
     "subjects": [
-      "🎊 *20.05.2024:* Pfingstferien (schulfrei) (Hessen)",
-      "📌 *17.06.2024 (08:00-15:00):* Projektwoche - Thema: Nachhaltigkeit",
-      "🎊 *15.07.2024:* Sommerferien (schulfrei) (Hessen)"
+      "📌 *06.01.2025:* B-Woche (02.) - Bei der 02. Woche handelt es sich um eine B-Woche.",
+      "📌 *13.01.2025:* A-Woche (03.) - Bei der 03. Woche handelt es sich um eine A-Woche.",
+      "📌 *20.01.2025:* B-Woche (04.) - Bei der 04. Woche handelt es sich um eine B-Woche.",
+      "📌 *27.01.2025:* A-Woche (05.) - Bei der 05. Woche handelt es sich um eine A-Woche.",
+      "📌 *03.02.2025:* B-Woche (06.) - Bei der 06. Woche handelt es sich um eine B-Woche.",
+      "📌 *10.02.2025:* A-Woche (07.) - Bei der 07. Woche handelt es sich um eine A-Woche.",
+      "📌 *17.02.2025:* B-Woche (08.) - Bei der 08. Woche handelt es sich um eine B-Woche.",
+      "📌 *24.02.2025:* A-Woche (09.) - Bei der 09. Woche handelt es sich um eine A-Woche.",
+      "📌 *03.03.2025:* B-Woche (10.) - Bei der 10. Woche handelt es sich um eine B-Woche.",
+      "📌 *10.03.2025:* A-Woche (11.) - Bei der 11. Woche handelt es sich um eine A-Woche.",
+      "📌 *17.03.2025:* B-Woche (12.) - Bei der 12. Woche handelt es sich um eine B-Woche.",
+      "📌 *24.03.2025:* A-Woche (13.) - Bei der 13. Woche handelt es sich um eine A-Woche.",
+      "📌 *31.03.2025:* B-Woche (14.) - Bei der 14. Woche handelt es sich um eine B-Woche.",
+      "📌 *07.04.2025:* A-Woche (15.) - Bei der 15. Woche handelt es sich um eine A-Woche.",
+      "📌 *14.04.2025:* B-Woche (16.) - Bei der 16. Woche handelt es sich um eine B-Woche.",
+      "📌 *21.04.2025:* A-Woche (17.) - Bei der 17. Woche handelt es sich um eine A-Woche.",
+      "🎊 *21.04.2025:* Ostermontag (schulfrei)",
+      "📌 *28.04.2025:* B-Woche (18.) - Bei der 18. Woche handelt es sich um eine B-Woche.",
+      "📌 *05.05.2025:* A-Woche (19.) - Bei der 19. Woche handelt es sich um eine A-Woche.",
+      "📌 *12.05.2025:* B-Woche (20.) - Bei der 20. Woche handelt es sich um eine B-Woche.",
+      "📌 *19.05.2025:* A-Woche (21.) - Bei der 21. Woche handelt es sich um eine A-Woche.",
+      "📝 *19.05.2025 (08:00-13:00):* Lernfeld 05 11 - 12 (11bfi0, 12bfi0) Klausur - Klausur in Lernfeld 05 11 - 12 (11bfi0, 12bfi0) (112LF0533-BFSM/INVE/OHNE)",
+      "📌 *26.05.2025:* B-Woche (22.) - Bei der 22. Woche handelt es sich um eine B-Woche.",
+      "📌 *02.06.2025:* A-Woche (23.) - Bei der 23. Woche handelt es sich um eine A-Woche.",
+      "📌 *09.06.2025:* B-Woche (24.) - Bei der 24. Woche handelt es sich um eine B-Woche.",
+      "🎊 *09.06.2025:* Pfingstmontag (schulfrei)",
+      "📌 *16.06.2025:* A-Woche (25.) - Bei der 25. Woche handelt es sich um eine A-Woche.",
+      "📌 *23.06.2025:* B-Woche (26.) - Bei der 26. Woche handelt es sich um eine B-Woche.",
+      "📌 *30.06.2025:* A-Woche (27.) - Bei der 27. Woche handelt es sich um eine A-Woche.",
+      "📌 *07.07.2025:* B-Woche (28.) - Bei der 28. Woche handelt es sich um eine B-Woche.",
+      "📌 *14.07.2025:* A-Woche (29.) - Bei der 29. Woche handelt es sich um eine A-Woche.",
+      "📌 *21.07.2025:* B-Woche (30.) - Bei der 30. Woche handelt es sich um eine B-Woche."
     ]
   },
   "Dienstag": {
     "message": "📚 *ANSTEHENDE KLAUSUREN* 📝",
-    "subjects": []
+    "subjects": [
+      "📝 *25.02.2025 (11:30-13:00):* Lernfeld 01 11 - 12 (11bfi0, 12bfi0) Klausur - Klausur in Lernfeld 01 11 - 12 (11bfi0, 12bfi0) (112LF0130-BFSM/INVE/OHNE)",
+      "📝 *04.03.2025 (11:30-13:00):* Lernfeld 01 11 - 12 (11bfi0, 12bfi0) Klausur - Klausur in Lernfeld 01 11 - 12 (11bfi0, 12bfi0) (112LF0130-BFSM/INVE/OHNE)",
+      "📝 *13.05.2025 (08:00-09:30):* Deutschklausur (R 34)",
+      "📝 *27.05.2025 (11:30-13:00):* Lernfeld 01 11 - 12 (11bfi0, 12bfi0) Klausur - Klausur in Lernfeld 01 11 - 12 (11bfi0, 12bfi0) (112LF0130-BFSM/INVE/OHNE)"
+    ]
   },
   "Mittwoch": {
     "message": "🌟 *MITTE DER WOCHE* 🌟",
     "subjects": [
-      "📝 *15.05.2024 (08:00-10:00):* Matheprüfung - Thema: Analysis (Raum 201)",
-      "📝 *22.05.2024 (09:00-11:30):* Deutschklausur - Thema: Literatur (Raum 104)",
-      "📌 *29.05.2024 (09:00-15:00):* Exkursion Museum - Geschichte der Technik (Technikmuseum)"
+      "🎊 *01.01.2025:* Neujahr (schulfrei)",
+      "📝 *30.04.2025 (11:30-15:00):* Lernfeld 07 11 - 12 (11bfi0, 12bfi0) Klausur - Klausur in Lernfeld 07 11 - 12 (11bfi0, 12bfi0) (112LF0728-BFSM/INVE/OHNE)"
     ]
   },
   "Donnerstag": {
     "message": "🗓️ *KOMMENDE FEIERTAGE* 🎉",
     "subjects": [
-      "📝 *27.06.2024 (10:00-11:30):* Informatik Test - Programmierung (Computerraum)"
+      "🎊 *01.05.2025:* Tag der Arbeit (schulfrei)",
+      "🎊 *29.05.2025:* Christi Himmelfahrt (schulfrei)",
+      "🎊 *19.06.2025:* Fronleichnam (schulfrei)"
     ]
   },
   "Freitag": {
     "message": "📝 *FREITAGS-KLAUSUREN* 📝",
     "subjects": [
-      "📌 *14.06.2024 (14:00-19:00):* Elternsprechtag (Schule)"
+      "📝 *21.03.2025 (09:45-11:15):* Lernfeld 02 11 - 12 (11bfi0, 12bfi0) Klausur - Klausur in Lernfeld 02 11 - 12 (11bfi0, 12bfi0) (112LF0219-BFSM/INVE/OHNE)",
+      "🎊 *18.04.2025:* Karfreitag (schulfrei)",
+      "📝 *16.05.2025 (09:45-11:15):* Lernfeld 02 11 - 12 (11bfi0, 12bfi0) Klausur - Klausur in Lernfeld 02 11 - 12 (11bfi0, 12bfi0) (112LF0219-BFSM/INVE/OHNE)",
+      "📝 *23.05.2025 (09:45-11:15):* Lernfeld 02 11 - 12 (11bfi0, 12bfi0) Klausur - Klausur in Lernfeld 02 11 - 12 (11bfi0, 12bfi0) (112LF0219-BFSM/INVE/OHNE)"
     ]
   },
   "Samstag": {
@@ -37,6 +75,9 @@
   },
   "Sonntag": {
     "message": "🔄 *WOCHE VORAUSPLANEN* 📆",
-    "subjects": []
+    "subjects": [
+      "🎊 *20.04.2025:* Ostersonntag (schulfrei)",
+      "🎊 *08.06.2025:* Pfingstsonntag (schulfrei)"
+    ]
   }
 }
