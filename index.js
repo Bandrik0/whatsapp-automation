@@ -3,9 +3,8 @@ const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const path = require('path');
 
-// Gruppenchat-ID (muss nach Authentifizierung aktualisiert werden)
-// Format ist normalerweise so: "49123456789-1234567890@g.us"
-const GRUPPENID = '120363327832370193@g.us';
+// Gruppenchat-ID aus der Umgebungsvariable oder fallback auf einen Standardwert
+const GRUPPENID = process.env.WHATSAPP_GROUP_ID || '120363327832370193@g.us';
 
 // Funktion zum Laden des Stundenplans
 function getSchedule() {

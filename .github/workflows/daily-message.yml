@@ -13,12 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '16'
+          cache: 'npm'
 
       - name: Installiere Abhängigkeiten
         run: npm ci
@@ -29,7 +30,7 @@ jobs:
           sudo apt-get install -y chromium-browser
       
       - name: Lade WhatsApp-Session
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .wwebjs_auth
           key: ${{ runner.os }}-wwebjs-auth
@@ -37,6 +38,7 @@ jobs:
       - name: Sende Nachricht
         env:
           SEND_MESSAGE: 'true'
+          WHATSAPP_GROUP_ID: ${{ secrets.WHATSAPP_GROUP_ID }}
           # TIME_OF_DAY zeigt an, ob es morgens oder nachmittags ist
           TIME_OF_DAY: ${{ github.event.schedule == '0 5 * * *' && 'morning' || 'afternoon' }}
         run: node index.js 
