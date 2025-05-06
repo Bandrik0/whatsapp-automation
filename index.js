@@ -26,12 +26,20 @@ function createDailyMessage() {
   const schedule = getSchedule();
   const currentDay = getCurrentDay();
   const dayData = schedule[currentDay];
+  const timeOfDay = process.env.TIME_OF_DAY || 'morning';
   
   if (!dayData) {
     return "Keine Informationen für heute verfügbar.";
   }
   
-  let message = `*Guten Morgen 10HBFI! - ${currentDay}*\n\n`;
+  let greeting = '';
+  if (timeOfDay === 'morning') {
+    greeting = `*Guten Morgen 10HBFI! - ${currentDay}*\n\n`;
+  } else {
+    greeting = `*Guten Nachmittag 10HBFI! - ${currentDay}*\n\n`;
+  }
+  
+  let message = greeting;
   message += `*${dayData.message}*\n\n`;
   
   if (dayData.subjects && dayData.subjects.length > 0) {
@@ -41,6 +49,83 @@ function createDailyMessage() {
   }
   
   message += "\nEine automatische Nachricht deines Klassen-Bots.";
+  
+  return message;
+}
+
+// Funktion zum Erstellen einer Nachricht mit dem Wochenplan
+function createWeeklyMessage() {
+  const schedule = getSchedule();
+  const currentDay = getCurrentDay();
+  const timeOfDay = process.env.TIME_OF_DAY || 'morning';
+  
+  let greeting = '';
+  if (timeOfDay === 'morning') {
+    greeting = `*Guten Morgen 10HBFI! - ${currentDay}*\n`;
+  } else {
+    greeting = `*Guten Nachmittag 10HBFI! - ${currentDay}*\n`;
+  }
+  
+  let message = greeting;
+  message += `*📅 WOCHENÜBERSICHT 📅*\n\n`;
+  
+  // Zuerst den aktuellen Tag anzeigen
+  const dayData = schedule[currentDay];
+  if (dayData) {
+    message += `*HEUTE (${currentDay}):*\n`;
+    message += `${dayData.message}\n`;
+    
+    if (dayData.subjects && dayData.subjects.length > 0) {
+      dayData.subjects.forEach(subject => {
+        message += `• ${subject}\n`;
+      });
+    }
+    message += '\n';
+  }
+  
+  // Dann die kommenden Tage (sortiert nach Wochentag)
+  const days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+  const currentDayIndex = days.indexOf(currentDay);
+  
+  message += `*KOMMENDE TAGE:*\n`;
+  
+  // Beginne mit dem nächsten Tag und gehe die Woche bis zum Ende durch
+  for (let i = currentDayIndex + 1; i < days.length; i++) {
+    const day = days[i];
+    const dayInfo = schedule[day];
+    
+    if (dayInfo && dayInfo.subjects && dayInfo.subjects.length > 0) {
+      message += `\n*${day}:*\n`;
+      message += `• ${dayInfo.subjects[0]}\n`;
+      
+      // Falls es mehr als einen Eintrag gibt, einen Hinweis anzeigen
+      if (dayInfo.subjects.length > 1) {
+        message += `• und ${dayInfo.subjects.length - 1} weitere Einträge\n`;
+      }
+    }
+  }
+  
+  // Falls wir mitten in der Woche sind, auch die Tage vom Anfang der nächsten Woche anzeigen
+  if (currentDayIndex > 0) {
+    message += `\n*NÄCHSTE WOCHE:*\n`;
+    
+    for (let i = 0; i < currentDayIndex; i++) {
+      const day = days[i];
+      const dayInfo = schedule[day];
+      
+      if (dayInfo && dayInfo.subjects && dayInfo.subjects.length > 0) {
+        message += `\n*${day}:*\n`;
+        message += `• ${dayInfo.subjects[0]}\n`;
+        
+        // Falls es mehr als einen Eintrag gibt, einen Hinweis anzeigen
+        if (dayInfo.subjects.length > 1) {
+          message += `• und ${dayInfo.subjects.length - 1} weitere Einträge\n`;
+        }
+      }
+    }
+  }
+  
+  message += "\n\nEine automatische Nachricht deines Klassen-Bots.";
   
   return message;
 }
@@ -64,7 +149,7 @@ client.on('ready', async () => {
   
   try {
     // Nachricht für heute erstellen und senden
-    const message = createDailyMessage();
+    const message = createWeeklyMessage();
     
     // Prüfen ob es eine Testausführung ist oder eine geplante Ausführung
     if (process.env.SEND_MESSAGE === 'true') {

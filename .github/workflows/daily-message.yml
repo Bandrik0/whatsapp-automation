@@ -1,9 +1,11 @@
-name: Tägliche WhatsApp-Nachricht
+name: Tägliche WhatsApp-Nachrichten
 
 on:
   schedule:
     # Jeden Tag um 7:00 Uhr (UTC+2 -> 5:00 UTC)
     - cron: '0 5 * * *'
+    # Jeden Tag um 15:00 Uhr nach der Schule (UTC+2 -> 13:00 UTC)
+    - cron: '0 13 * * *'
   workflow_dispatch:  # Ermöglicht manuelle Auslösung im GitHub-Interface
 
 jobs:
@@ -35,4 +37,6 @@ jobs:
       - name: Sende Nachricht
         env:
           SEND_MESSAGE: 'true'
+          # TIME_OF_DAY zeigt an, ob es morgens oder nachmittags ist
+          TIME_OF_DAY: ${{ github.event.schedule == '0 5 * * *' && 'morning' || 'afternoon' }}
         run: node index.js 
