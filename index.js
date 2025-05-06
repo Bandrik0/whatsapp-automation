@@ -68,16 +68,69 @@ function createWeeklyMessage() {
   let message = greeting;
   message += `*📅 WOCHENÜBERSICHT 📅*\n\n`;
   
-  // Zuerst den aktuellen Tag anzeigen
+  // Aktuelles Datum für Vergleiche
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+  const currentDateNum = currentDate.getDate();
+  
+  // Wir definieren eine Funktion, um zu prüfen, ob ein Termin relevant ist
+  function isRelevantEvent(subject) {
+    // Extrahiere das Datum aus dem formatierten String (z.B. "📝 *15.10.2023 (08:00-10:00):* Matheprüfung")
+    const dateMatch = subject.match(/\*(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+    
+    if (!dateMatch) return false;
+    
+    const day = parseInt(dateMatch[1]);
+    const month = parseInt(dateMatch[2]) - 1; // Monate in JS sind 0-basiert
+    const year = parseInt(dateMatch[3]);
+    
+    const eventDate = new Date(year, month, day);
+    
+    // Wir zeigen nur Termine für das aktuelle Jahr an
+    // Oder Termine, die höchstens 3 Monate in der Zukunft liegen
+    const threeMthsLater = new Date();
+    threeMthsLater.setMonth(currentMonth + 3);
+    
+    return (
+      year === currentYear || 
+      (eventDate > currentDate && eventDate < threeMthsLater)
+    );
+  }
+  
+  // Wir definieren eine Funktion, um das Datum aus einem formatierten Ereignis zu extrahieren
+  function getDateFromEvent(subject) {
+    const dateMatch = subject.match(/\*(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+    
+    if (!dateMatch) return new Date(9999, 11, 31); // Weit in der Zukunft, falls kein Datum gefunden
+    
+    const day = parseInt(dateMatch[1]);
+    const month = parseInt(dateMatch[2]) - 1; // Monate in JS sind 0-basiert
+    const year = parseInt(dateMatch[3]);
+    
+    return new Date(year, month, day);
+  }
+  
+  // Zuerst den aktuellen Tag anzeigen und nach Datum sortieren
   const dayData = schedule[currentDay];
   if (dayData) {
     message += `*HEUTE (${currentDay}):*\n`;
     message += `${dayData.message}\n`;
     
     if (dayData.subjects && dayData.subjects.length > 0) {
-      dayData.subjects.forEach(subject => {
-        message += `• ${subject}\n`;
-      });
+      // Filtere relevante Ereignisse
+      const relevantSubjects = dayData.subjects
+        .filter(isRelevantEvent)
+        // Sortiere nach Datum (nächste zuerst)
+        .sort((a, b) => getDateFromEvent(a) - getDateFromEvent(b));
+      
+      if (relevantSubjects.length > 0) {
+        relevantSubjects.forEach(subject => {
+          message += `• ${subject}\n`;
+        });
+      } else {
+        message += `• Keine anstehenden Termine für heute\n`;
+      }
     }
     message += '\n';
   }
@@ -94,12 +147,20 @@ function createWeeklyMessage() {
     const dayInfo = schedule[day];
     
     if (dayInfo && dayInfo.subjects && dayInfo.subjects.length > 0) {
-      message += `\n*${day}:*\n`;
-      message += `• ${dayInfo.subjects[0]}\n`;
+      // Filtere relevante Ereignisse
+      const relevantSubjects = dayInfo.subjects
+        .filter(isRelevantEvent)
+        // Sortiere nach Datum (nächste zuerst)
+        .sort((a, b) => getDateFromEvent(a) - getDateFromEvent(b));
       
-      // Falls es mehr als einen Eintrag gibt, einen Hinweis anzeigen
-      if (dayInfo.subjects.length > 1) {
-        message += `• und ${dayInfo.subjects.length - 1} weitere Einträge\n`;
+      if (relevantSubjects.length > 0) {
+        message += `\n*${day}:*\n`;
+        message += `• ${relevantSubjects[0]}\n`;
+        
+        // Falls es mehr als einen Eintrag gibt, einen Hinweis anzeigen
+        if (relevantSubjects.length > 1) {
+          message += `• und ${relevantSubjects.length - 1} weitere Einträge\n`;
+        }
       }
     }
   }
@@ -113,12 +174,20 @@ function createWeeklyMessage() {
       const dayInfo = schedule[day];
       
       if (dayInfo && dayInfo.subjects && dayInfo.subjects.length > 0) {
-        message += `\n*${day}:*\n`;
-        message += `• ${dayInfo.subjects[0]}\n`;
+        // Filtere relevante Ereignisse
+        const relevantSubjects = dayInfo.subjects
+          .filter(isRelevantEvent)
+          // Sortiere nach Datum (nächste zuerst)
+          .sort((a, b) => getDateFromEvent(a) - getDateFromEvent(b));
         
-        // Falls es mehr als einen Eintrag gibt, einen Hinweis anzeigen
-        if (dayInfo.subjects.length > 1) {
-          message += `• und ${dayInfo.subjects.length - 1} weitere Einträge\n`;
+        if (relevantSubjects.length > 0) {
+          message += `\n*${day}:*\n`;
+          message += `• ${relevantSubjects[0]}\n`;
+          
+          // Falls es mehr als einen Eintrag gibt, einen Hinweis anzeigen
+          if (relevantSubjects.length > 1) {
+            message += `• und ${relevantSubjects.length - 1} weitere Einträge\n`;
+          }
         }
       }
     }
