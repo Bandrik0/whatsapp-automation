@@ -21,6 +21,9 @@ jobs:
       - name: Installiere Abhängigkeiten
         run: npm ci
 
+      - name: Stelle sicher, dass csv-parser installiert ist
+        run: npm install csv-parser
+
       - name: Stelle sicher, dass Chromium installiert ist
         run: |
           sudo apt-get update
