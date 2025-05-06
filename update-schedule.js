@@ -214,17 +214,15 @@ async function autoLoginAndDownload() {
       throw error;
     }
     
-    // Warten auf die Navigation nach dem Login
-    console.log('Warte auf Navigation nach Login...');
-    await page.waitForNavigation({ waitUntil: 'networkidle2' }).catch(e => {
-      console.log('Navigation-Timeout nach Login, fahre trotzdem fort...');
-    });
+    // Warten nach dem Login ohne auf Navigation zu warten
+    console.log('Login-Button geklickt, warte auf Session-Erstellung...');
+    // Längere Wartezeit, um dem Login Zeit zu geben
+    await page.waitForTimeout(5000);
     
-    await page.waitForTimeout(3000);
     await page.screenshot({ path: path.join(DOWNLOAD_DIR, 'after-login.png') });
     
     // Prüfen, ob wir eingeloggt sind oder eine Fehlermeldung angezeigt wird
-    const errorElement = await page.$('.alert-danger, .error-message, .error');
+    const errorElement = await page.$('.alert-danger, .error-message, .error, .alert-error');
     if (errorElement) {
       const errorText = await page.evaluate(el => el.textContent, errorElement);
       console.log('Login-Fehler erkannt:', errorText);
@@ -237,232 +235,227 @@ async function autoLoginAndDownload() {
       vertretungsplan: null
     };
     
-    // 1. Zuerst den Kalender versuchen
-    console.log('Suche nach Zugang zum Kalender...');
+    // Nach dem Login direkt zu bestimmten URLs navigieren
+    console.log('Versuche direkt zur Startseite zu navigieren...');
     
     try {
-      // Navigiere zur Startseite, falls wir nach dem Login woanders gelandet sind
-      console.log('Navigiere zur Startseite...');
-      await page.goto('https://connect.schulportal.hessen.de/', { waitUntil: 'networkidle2' }).catch(e => {
-        console.log('Navigation zur Startseite fehlgeschlagen, versuche trotzdem fortzufahren...');
-      });
-      
-      await page.waitForTimeout(2000);
-      await page.screenshot({ path: path.join(DOWNLOAD_DIR, 'startpage.png') });
-      
-      // Verschiedene mögliche Selektoren für Kalender durchprobieren
-      const calendarSelectors = [
-        'a[href*="kalender"]',
-        'a[href*="Kalender"]',
-        'a:contains("Kalender")',
-        'a:contains("kalender")',
-        '.menu a[href*="kalender"]',
-        '#menu a[href*="kalender"]',
-        'a[title*="Kalender"]',
-        '.kachel:has-text("Kalender")'
+      // Liste möglicher URLs, die nach Login funktionieren könnten
+      const possibleStartpages = [
+        'https://connect.schulportal.hessen.de/',
+        'https://start.schulportal.hessen.de/',
+        'https://portal.schulportal.hessen.de/'
       ];
       
-      let calendarLinkFound = false;
+      let pageLoaded = false;
       
-      for (const selector of calendarSelectors) {
+      // Versuche alle möglichen Startseiten
+      for (const startpage of possibleStartpages) {
+        if (pageLoaded) break;
+        
         try {
-          if (await page.$(selector)) {
-            console.log(`Kalender-Link gefunden mit Selektor: ${selector}`);
-            await page.click(selector);
-            calendarLinkFound = true;
-            break;
-          }
+          console.log(`Versuche Navigation zu: ${startpage}`);
+          await page.goto(startpage, { 
+            waitUntil: 'domcontentloaded',
+            timeout: 10000 
+          });
+          
+          // Kurz warten, um zu sehen, ob die Seite erfolgreich geladen wurde
+          await page.waitForTimeout(2000);
+          
+          // Prüfe, ob wir auf einer funktionierenden Seite gelandet sind
+          const pageTitle = await page.title();
+          console.log(`Aktuelle Seite Titel: ${pageTitle}`);
+          
+          // Mache einen Screenshot
+          await page.screenshot({ path: path.join(DOWNLOAD_DIR, `startpage-${startpage.replace(/[^\w]/g, '_')}.png`) });
+          
+          pageLoaded = true;
         } catch (e) {
-          console.log(`Selektor nicht gefunden: ${selector}`);
+          console.log(`Navigation zu ${startpage} fehlgeschlagen: ${e.message}`);
         }
       }
-      
-      // Wenn kein direkter Link gefunden wurde, versuche direkten Zugriff auf die URL
-      if (!calendarLinkFound) {
-        console.log('Kein Kalender-Link gefunden, versuche direkte URL...');
-        await page.goto(`${SCHULPORTAL_URL}kalender.php`, { waitUntil: 'networkidle2' });
-      }
-      
-      // Nach Navigation zum Kalender
-      await page.waitForTimeout(2000);
-      await page.screenshot({ path: path.join(DOWNLOAD_DIR, 'calendar-page.png') });
-      
-      // Versuche, den Exportieren/Download-Button zu finden
-      console.log('Suche nach Export-Funktion...');
-      
-      const exportSelectors = [
-        'a[href*="export"]',
-        'a[href*="Export"]',
-        'button:contains("Export")',
-        'button:contains("exportieren")',
-        'a:contains("CSV")',
-        'button:contains("CSV")'
+    } catch (e) {
+      console.log('Alle Navigationsversuche fehlgeschlagen:', e.message);
+      console.log('Versuche trotzdem fortzufahren...');
+    }
+    
+    // 1. Zuerst den Kalender versuchen - direkte URL
+    console.log('Versuche direkt zum Kalender zu navigieren...');
+    
+    try {
+      // Versuche verschiedene mögliche Kalender-URLs
+      const calendarUrls = [
+        'https://connect.schulportal.hessen.de/kalender.php',
+        'https://start.schulportal.hessen.de/kalender.php',
+        'https://portal.schulportal.hessen.de/kalender.php'
       ];
       
-      let exportLinkFound = false;
+      let calendarLoaded = false;
       
-      for (const selector of exportSelectors) {
+      for (const calendarUrl of calendarUrls) {
+        if (calendarLoaded) break;
+        
         try {
-          if (await page.$(selector)) {
-            console.log(`Export-Link gefunden mit Selektor: ${selector}`);
-            await page.click(selector);
-            exportLinkFound = true;
-            break;
+          console.log(`Versuche Navigation zu Kalender: ${calendarUrl}`);
+          await page.goto(calendarUrl, { 
+            waitUntil: 'domcontentloaded',
+            timeout: 10000 
+          });
+          
+          await page.waitForTimeout(2000);
+          await page.screenshot({ path: path.join(DOWNLOAD_DIR, 'calendar-page.png') });
+          
+          // Prüfe, ob wir auf der Kalenderseite sind
+          const pageContent = await page.content();
+          if (pageContent.includes('Kalender') || pageContent.includes('calendar')) {
+            console.log('Kalenderseite erfolgreich geladen');
+            calendarLoaded = true;
           }
         } catch (e) {
-          console.log(`Export-Selektor nicht gefunden: ${selector}`);
+          console.log(`Navigation zu ${calendarUrl} fehlgeschlagen: ${e.message}`);
         }
       }
     } catch (error) {
       console.error('Fehler beim Zugriff auf Kalender:', error);
     }
     
-    // 2. Dann den Vertretungsplan versuchen
-    console.log('Suche nach Vertretungsplan...');
+    // 2. Dann den Vertretungsplan versuchen - direkte URL
+    console.log('Versuche direkt zum Vertretungsplan zu navigieren...');
     
     try {
-      // Zurück zur Startseite
-      console.log('Navigiere zur Startseite für Vertretungsplan...');
-      await page.goto('https://connect.schulportal.hessen.de/', { waitUntil: 'networkidle2' }).catch(e => {
-        console.log('Navigation zur Startseite fehlgeschlagen, versuche trotzdem fortzufahren...');
-      });
-      
-      await page.waitForTimeout(2000);
-      
-      // Vertretungsplan-Selektoren durchprobieren
-      const substSelectors = [
-        'a[href*="vertretungsplan"]',
-        'a[href*="Vertretungsplan"]',
-        'a:contains("Vertretungsplan")',
-        'a:contains("vertretungsplan")',
-        'a:contains("Vertretung")',
-        'a[href*="vertretung"]',
-        '.kachel:has-text("Vertretung")',
-        'a[title*="Vertretung"]'
+      // Versuche verschiedene mögliche Vertretungsplan-URLs
+      const substUrls = [
+        'https://connect.schulportal.hessen.de/vertretungsplan.php',
+        'https://start.schulportal.hessen.de/vertretungsplan.php',
+        'https://portal.schulportal.hessen.de/vertretungsplan.php'
       ];
       
-      let vertretungLinkFound = false;
+      let substLoaded = false;
       
-      for (const selector of substSelectors) {
+      for (const substUrl of substUrls) {
+        if (substLoaded) break;
+        
         try {
-          if (await page.$(selector)) {
-            console.log(`Vertretungsplan-Link gefunden mit Selektor: ${selector}`);
-            await page.click(selector);
-            vertretungLinkFound = true;
-            break;
+          console.log(`Versuche Navigation zu Vertretungsplan: ${substUrl}`);
+          await page.goto(substUrl, { 
+            waitUntil: 'domcontentloaded',
+            timeout: 10000 
+          });
+          
+          await page.waitForTimeout(2000);
+          await page.screenshot({ path: path.join(DOWNLOAD_DIR, 'vertretungsplan-page.png') });
+          
+          // Prüfe, ob wir auf der Vertretungsplan-Seite sind
+          const pageContent = await page.content();
+          if (pageContent.includes('Vertretung') || pageContent.includes('Vertretungsplan')) {
+            console.log('Vertretungsplan-Seite erfolgreich geladen');
+            substLoaded = true;
           }
         } catch (e) {
-          console.log(`Vertretungsplan-Selektor nicht gefunden: ${selector}`);
+          console.log(`Navigation zu ${substUrl} fehlgeschlagen: ${e.message}`);
         }
       }
       
-      // Wenn kein direkter Link gefunden wurde, versuche direkte URL
-      if (!vertretungLinkFound) {
-        console.log('Kein Vertretungsplan-Link gefunden, versuche direkte URL...');
-        await page.goto(`${SCHULPORTAL_URL}vertretungsplan.php`, { waitUntil: 'networkidle2' });
-      }
+      // Nur fortfahren, wenn die Seite erfolgreich geladen wurde
+      if (substLoaded) {
+        // Extrahiere Vertretungsplan-Daten direkt aus der Seite
+        console.log('Versuche Vertretungsplandaten zu extrahieren...');
       
-      // Nach Navigation zum Vertretungsplan
-      await page.waitForTimeout(2000);
-      await page.screenshot({ path: path.join(DOWNLOAD_DIR, 'vertretungsplan-page.png') });
-      
-      // Extrahiere Vertretungsplan-Daten direkt aus der Seite
-      console.log('Versuche Vertretungsplandaten zu extrahieren...');
-      
-      const vertretungData = await page.evaluate(() => {
-        // Suche nach Tabellen, die den Vertretungsplan enthalten könnten
-        const tables = Array.from(document.querySelectorAll('table'));
-        const data = [];
-        
-        // Suche nach Datumsangaben
-        const dateElements = document.querySelectorAll('h2, h3, h4, .date, .day');
-        let currentDate = '';
-        
-        for (const elem of dateElements) {
-          if (elem.textContent.match(/\d{1,2}\.\d{1,2}\.\d{4}/) ||
-              elem.textContent.match(/Montag|Dienstag|Mittwoch|Donnerstag|Freitag/)) {
-            currentDate = elem.textContent.trim();
-            break;
-          }
-        }
-        
-        // Durchlaufe alle Tabellen und suche nach Vertretungsdaten
-        for (const table of tables) {
-          // Versuche Tabellen-Header zu identifizieren
-          const headers = Array.from(table.querySelectorAll('th, thead td'))
-            .map(th => th.textContent.trim());
+        const vertretungData = await page.evaluate(() => {
+          // Suche nach Tabellen, die den Vertretungsplan enthalten könnten
+          const tables = Array.from(document.querySelectorAll('table'));
+          const data = [];
           
-          // Prüfe, ob es sich um eine Vertretungsplan-Tabelle handeln könnte
-          if (headers.some(h => 
-              h.includes('Klasse') || 
-              h.includes('Stunde') || 
-              h.includes('Fach') || 
-              h.includes('Vertretung') ||
-              h.includes('Raum'))) {
+          // Suche nach Datumsangaben
+          const dateElements = document.querySelectorAll('h2, h3, h4, .date, .day');
+          let currentDate = '';
+          
+          for (const elem of dateElements) {
+            if (elem.textContent.match(/\d{1,2}\.\d{1,2}\.\d{4}/) ||
+                elem.textContent.match(/Montag|Dienstag|Mittwoch|Donnerstag|Freitag/)) {
+              currentDate = elem.textContent.trim();
+              break;
+            }
+          }
+          
+          // Durchlaufe alle Tabellen und suche nach Vertretungsdaten
+          for (const table of tables) {
+            // Versuche Tabellen-Header zu identifizieren
+            const headers = Array.from(table.querySelectorAll('th, thead td'))
+              .map(th => th.textContent.trim());
             
-            // Extrahiere die Zeilen
-            const rows = Array.from(table.querySelectorAll('tbody tr'));
-            
-            for (const row of rows) {
-              const cells = Array.from(row.querySelectorAll('td'))
-                .map(cell => cell.textContent.trim());
+            // Prüfe, ob es sich um eine Vertretungsplan-Tabelle handeln könnte
+            if (headers.some(h => 
+                h.includes('Klasse') || 
+                h.includes('Stunde') || 
+                h.includes('Fach') || 
+                h.includes('Vertretung') ||
+                h.includes('Raum'))) {
               
-              // Wenn wir genug Zellen haben und mindestens eine nicht leer ist
-              if (cells.length >= 3 && cells.some(cell => cell.length > 0)) {
-                // Extrahiere relevante Daten basierend auf Position oder Header
-                const rowData = {};
+              // Extrahiere die Zeilen
+              const rows = Array.from(table.querySelectorAll('tbody tr'));
+              
+              for (const row of rows) {
+                const cells = Array.from(row.querySelectorAll('td'))
+                  .map(cell => cell.textContent.trim());
                 
-                // Versuche Daten zuzuordnen (Positionen können variieren)
-                headers.forEach((header, index) => {
-                  if (index < cells.length) {
-                    rowData[header] = cells[index];
-                  }
-                });
-                
-                // Füge das Datum hinzu
-                rowData.Datum = currentDate;
-                
-                // Füge diese Zeile zu den Daten hinzu
-                data.push(rowData);
+                // Wenn wir genug Zellen haben und mindestens eine nicht leer ist
+                if (cells.length >= 3 && cells.some(cell => cell.length > 0)) {
+                  // Extrahiere relevante Daten basierend auf Position oder Header
+                  const rowData = {};
+                  
+                  // Versuche Daten zuzuordnen (Positionen können variieren)
+                  headers.forEach((header, index) => {
+                    if (index < cells.length) {
+                      rowData[header] = cells[index];
+                    }
+                  });
+                  
+                  // Füge das Datum hinzu
+                  rowData.Datum = currentDate;
+                  
+                  // Füge diese Zeile zu den Daten hinzu
+                  data.push(rowData);
+                }
               }
             }
           }
-        }
-        
-        // Wenn keine strukturierten Daten gefunden wurden, versuche es mit einem einfacheren Ansatz
-        if (data.length === 0) {
-          // Suche nach Text, der auf Vertretungen hinweisen könnte
-          const content = document.body.textContent;
           
-          if (content.includes('Vertretung') || content.includes('Ausfall') || 
-              content.includes('Entfall') || content.includes('Vertretungsplan')) {
+          // Wenn keine strukturierten Daten gefunden wurden, versuche es mit einem einfacheren Ansatz
+          if (data.length === 0) {
+            // Suche nach Text, der auf Vertretungen hinweisen könnte
+            const content = document.body.textContent;
             
-            // Extrahiere den relevanten Teil des Textes
-            const relevantText = content.split('\n')
-              .filter(line => 
-                  line.trim().length > 0 && 
-                  (line.includes('Klasse') || 
-                   line.includes('Stunde') || 
-                   line.includes('Vertretung') || 
-                   line.includes('Ausfall')))
-              .join('\n');
-            
-            data.push({
-              rawText: relevantText,
-              Datum: currentDate
-            });
+            if (content.includes('Vertretung') || content.includes('Ausfall') || 
+                content.includes('Entfall') || content.includes('Vertretungsplan')) {
+              
+              // Extrahiere den relevanten Teil des Textes
+              const relevantText = content.split('\n')
+                .filter(line => 
+                    line.trim().length > 0 && 
+                    (line.includes('Klasse') || 
+                     line.includes('Stunde') || 
+                     line.includes('Vertretung') || 
+                     line.includes('Ausfall')))
+                .join('\n');
+              
+              data.push({
+                rawText: relevantText,
+                Datum: currentDate
+              });
+            }
           }
-        }
+          
+          return data;
+        });
         
-        return data;
-      });
-      
-      // Speichere Vertretungsplan-Daten
-      if (vertretungData && vertretungData.length > 0) {
-        console.log(`${vertretungData.length} Vertretungseinträge gefunden.`);
-        results.vertretungsplan = vertretungData;
-      } else {
-        console.log('Keine Vertretungsplan-Daten gefunden oder Zugriff nicht möglich.');
+        // Speichere Vertretungsplan-Daten
+        if (vertretungData && vertretungData.length > 0) {
+          console.log(`${vertretungData.length} Vertretungseinträge gefunden.`);
+          results.vertretungsplan = vertretungData;
+        } else {
+          console.log('Keine Vertretungsplan-Daten gefunden oder Zugriff nicht möglich.');
+        }
       }
     } catch (error) {
       console.error('Fehler beim Zugriff auf Vertretungsplan:', error);
