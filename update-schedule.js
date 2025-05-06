@@ -4,7 +4,7 @@ const path = require('path');
 const csv = require('csv-parser');
 
 // Konfiguration
-const SCHULPORTAL_URL = 'https://start.schulportal.hessen.de/';
+const SCHULPORTAL_URL = 'https://login.schulportal.hessen.de/?url=aHR0cHM6Ly9jb25uZWN0LnNjaHVscG9ydGFsLmhlc3Nlbi5kZS8=&skin=sp&i=6292';
 const OUTPUT_FILE = path.join(__dirname, 'schedule.json');
 const CSV_FILE = process.env.CSV_FILE || path.join(__dirname, 'schulkalender.csv');
 const DOWNLOAD_DIR = path.join(__dirname, 'downloads');
@@ -91,28 +91,46 @@ async function autoLoginAndDownload() {
     
     // Flexibler Login-Prozess, versucht verschiedene Selektoren
     try {
+      // Prüfen, ob wir uns auf der Login-Auswahl-Seite befinden und wenn ja, "Login mit Schulbezug" auswählen
+      const loginWithSchoolBtn = await page.$('a[data-target="#loginSchool"]');
+      if (loginWithSchoolBtn) {
+        console.log('Login-Auswahl-Seite gefunden, wähle "Login mit Schulbezug"');
+        await loginWithSchoolBtn.click();
+        await page.waitForTimeout(1000);
+      }
+      
       // Erster Versuch: Standard-Selektoren
-      if (await page.$('#benutzername')) {
+      if (await page.$('#inputSchulportalpwd')) {
+        console.log('Gefunden: Schulportal-Login-Formular');
+        // Zuerst Benutzername eingeben
+        await page.type('#inputEmail', USERNAME);
+        // Dann Passwort
+        await page.type('#inputSchulportalpwd', PASSWORD);
+        // Login-Button klicken
+        await page.click('button[type="submit"]');
+      } 
+      // Zweiter Versuch: Alte Login-Formular-Selektoren
+      else if (await page.$('#benutzername')) {
         console.log('Gefunden: Standard-Login-Formular');
         await page.type('#benutzername', USERNAME);
         await page.type('#passwort', PASSWORD);
         await page.click('button[type="submit"]');
       } 
-      // Zweiter Versuch: Alternative Selektoren
+      // Dritter Versuch: Alternative Selektoren
       else if (await page.$('input[name="user"]')) {
         console.log('Gefunden: Alternatives Login-Formular');
         await page.type('input[name="user"]', USERNAME);
         await page.type('input[name="password"]', PASSWORD);
         await page.click('input[type="submit"]');
       }
-      // Dritter Versuch: Suche nach iFrame
+      // Vierter Versuch: Suche nach iFrame
       else {
         console.log('Suche nach Login iFrame...');
         const frames = page.frames();
         let loginFrame = null;
         
         for (const frame of frames) {
-          if (await frame.$('#benutzername') || await frame.$('input[name="user"]')) {
+          if (await frame.$('#inputEmail') || await frame.$('#benutzername') || await frame.$('input[name="user"]')) {
             loginFrame = frame;
             break;
           }
@@ -120,7 +138,11 @@ async function autoLoginAndDownload() {
         
         if (loginFrame) {
           console.log('Login im iFrame gefunden');
-          if (await loginFrame.$('#benutzername')) {
+          if (await loginFrame.$('#inputEmail')) {
+            await loginFrame.type('#inputEmail', USERNAME);
+            await loginFrame.type('#inputSchulportalpwd', PASSWORD);
+            await loginFrame.click('button[type="submit"]');
+          } else if (await loginFrame.$('#benutzername')) {
             await loginFrame.type('#benutzername', USERNAME);
             await loginFrame.type('#passwort', PASSWORD);
             await loginFrame.click('button[type="submit"]');
@@ -143,8 +165,20 @@ async function autoLoginAndDownload() {
     
     // Warten auf die Navigation nach dem Login
     console.log('Warte auf Navigation nach Login...');
-    await page.waitForNavigation({ waitUntil: 'networkidle2' });
+    await page.waitForNavigation({ waitUntil: 'networkidle2' }).catch(e => {
+      console.log('Navigation-Timeout nach Login, fahre trotzdem fort...');
+    });
+    
+    await page.waitForTimeout(3000);
     await page.screenshot({ path: path.join(DOWNLOAD_DIR, 'after-login.png') });
+    
+    // Prüfen, ob wir eingeloggt sind oder eine Fehlermeldung angezeigt wird
+    const errorElement = await page.$('.alert-danger, .error-message, .error');
+    if (errorElement) {
+      const errorText = await page.evaluate(el => el.textContent, errorElement);
+      console.log('Login-Fehler erkannt:', errorText);
+      throw new Error(`Login-Fehler: ${errorText}`);
+    }
     
     // Sammle Daten für Rückgabe
     const results = {
@@ -156,6 +190,15 @@ async function autoLoginAndDownload() {
     console.log('Suche nach Zugang zum Kalender...');
     
     try {
+      // Navigiere zur Startseite, falls wir nach dem Login woanders gelandet sind
+      console.log('Navigiere zur Startseite...');
+      await page.goto('https://connect.schulportal.hessen.de/', { waitUntil: 'networkidle2' }).catch(e => {
+        console.log('Navigation zur Startseite fehlgeschlagen, versuche trotzdem fortzufahren...');
+      });
+      
+      await page.waitForTimeout(2000);
+      await page.screenshot({ path: path.join(DOWNLOAD_DIR, 'startpage.png') });
+      
       // Verschiedene mögliche Selektoren für Kalender durchprobieren
       const calendarSelectors = [
         'a[href*="kalender"]',
@@ -163,7 +206,9 @@ async function autoLoginAndDownload() {
         'a:contains("Kalender")',
         'a:contains("kalender")',
         '.menu a[href*="kalender"]',
-        '#menu a[href*="kalender"]'
+        '#menu a[href*="kalender"]',
+        'a[title*="Kalender"]',
+        '.kachel:has-text("Kalender")'
       ];
       
       let calendarLinkFound = false;
@@ -226,7 +271,12 @@ async function autoLoginAndDownload() {
     
     try {
       // Zurück zur Startseite
-      await page.goto(SCHULPORTAL_URL, { waitUntil: 'networkidle2' });
+      console.log('Navigiere zur Startseite für Vertretungsplan...');
+      await page.goto('https://connect.schulportal.hessen.de/', { waitUntil: 'networkidle2' }).catch(e => {
+        console.log('Navigation zur Startseite fehlgeschlagen, versuche trotzdem fortzufahren...');
+      });
+      
+      await page.waitForTimeout(2000);
       
       // Vertretungsplan-Selektoren durchprobieren
       const substSelectors = [
@@ -235,7 +285,9 @@ async function autoLoginAndDownload() {
         'a:contains("Vertretungsplan")',
         'a:contains("vertretungsplan")',
         'a:contains("Vertretung")',
-        'a[href*="vertretung"]'
+        'a[href*="vertretung"]',
+        '.kachel:has-text("Vertretung")',
+        'a[title*="Vertretung"]'
       ];
       
       let vertretungLinkFound = false;
