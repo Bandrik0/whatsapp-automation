@@ -21,10 +21,20 @@ jobs:
       - name: Installiere Abhängigkeiten
         run: npm ci
 
-      - name: Aktualisiere Kalender aus CSV
-        run: node update-schedule.js
+      - name: Stelle sicher, dass Chromium installiert ist
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
+
+      - name: Erstelle Downloads-Verzeichnis
+        run: mkdir -p downloads
+      
+      - name: Aktualisiere Kalender mit automatischer Schulportal-Verbindung
         env:
+          SCHULPORTAL_USERNAME: ${{ secrets.SCHULPORTAL_USERNAME }}
+          SCHULPORTAL_PASSWORD: ${{ secrets.SCHULPORTAL_PASSWORD }}
           CSV_FILE: ${{ github.workspace }}/SPH-Schulkalender-Khalaf.csv
+        run: node update-schedule.js
       
       - name: Commite geänderte schedule.json
         run: |
@@ -32,4 +42,14 @@ jobs:
           git config --local user.name "GitHub Action"
           git add schedule.json
           git diff --quiet && git diff --staged --quiet || git commit -m "Automatische Aktualisierung des Schulkalenders"
-          git push 
+          git push
+          
+      # Optional: Wenn neue CSV-Dateien heruntergeladen wurden, füge sie auch zum Repository hinzu
+      - name: Prüfe und commite neue CSV-Dateien
+        run: |
+          if [ -d "downloads" ] && [ "$(ls -A downloads/)" ]; then
+            cp downloads/*.csv . 2>/dev/null || true
+            git add *.csv
+            git diff --quiet && git diff --staged --quiet || git commit -m "Neue CSV-Dateien vom Schulportal hinzugefügt"
+            git push
+          fi 
