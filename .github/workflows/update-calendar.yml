@@ -43,9 +43,14 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          # Prüfen ob Änderungen in schedule.json vorhanden sind
           git add schedule.json
-          git diff --quiet && git diff --staged --quiet || git commit -m "Automatische Aktualisierung des Schulkalenders"
-          git push
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen in schedule.json gefunden."
+          else
+            git commit -m "Automatische Aktualisierung des Schulkalenders"
+            git push
+          fi
           
       # Optional: Wenn neue CSV-Dateien heruntergeladen wurden, füge sie auch zum Repository hinzu
       - name: Prüfe und commite neue CSV-Dateien
@@ -53,6 +58,10 @@ jobs:
           if [ -d "downloads" ] && [ "$(ls -A downloads/)" ]; then
             cp downloads/*.csv . 2>/dev/null || true
             git add *.csv
-            git diff --quiet && git diff --staged --quiet || git commit -m "Neue CSV-Dateien vom Schulportal hinzugefügt"
-            git push
+            if git diff --staged --quiet; then
+              echo "Keine neuen CSV-Dateien gefunden."
+            else
+              git commit -m "Neue CSV-Dateien vom Schulportal hinzugefügt"
+              git push
+            fi
           fi 
