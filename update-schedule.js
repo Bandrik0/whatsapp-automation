@@ -517,14 +517,6 @@ function convertCSVToScheduleFormat(csvData, vertretungsplan) {
     "Freitag": {
       "message": "📝 *WOCHENABSCHLUSS & KOMMENDE TERMINE* 📆",
       "subjects": []
-    },
-    "Samstag": {
-      "message": "🎉 *WOCHENENDE & AUSBLICK* 📌",
-      "subjects": []
-    },
-    "Sonntag": {
-      "message": "🔄 *VORSCHAU AUF DIE KOMMENDE WOCHE* 📋",
-      "subjects": []
     }
   };
   
@@ -539,29 +531,21 @@ function convertCSVToScheduleFormat(csvData, vertretungsplan) {
       let day = '';
       if (entry.Datum) {
         // Versuche Tag aus Datum zu extrahieren
-        if (entry.Datum.includes('Montag')) day = 'Montag';
-        else if (entry.Datum.includes('Dienstag')) day = 'Dienstag';
-        else if (entry.Datum.includes('Mittwoch')) day = 'Mittwoch';
-        else if (entry.Datum.includes('Donnerstag')) day = 'Donnerstag';
-        else if (entry.Datum.includes('Freitag')) day = 'Freitag';
-        else if (entry.Datum.includes('Samstag')) day = 'Samstag';
-        else if (entry.Datum.includes('Sonntag')) day = 'Sonntag';
-        
-        // Wenn kein Tag gefunden, versuche Datum zu parsen
-        if (!day && entry.Datum.match(/\d{1,2}\.\d{1,2}\.\d{4}/)) {
-          try {
-            const dateParts = entry.Datum.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
-            if (dateParts) {
-              const date = new Date(
-                parseInt(dateParts[3]), // Jahr
-                parseInt(dateParts[2]) - 1, // Monat (0-basiert)
-                parseInt(dateParts[1]) // Tag
-              );
-              const days = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-              day = days[date.getDay()];
-            }
-          } catch (e) {
-            console.error('Fehler beim Parsen des Datums:', e);
+        const dateParts = entry.Datum.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+        if (dateParts) {
+          const date = new Date(
+            parseInt(dateParts[3]), // Jahr
+            parseInt(dateParts[2]) - 1, // Monat (0-basiert)
+            parseInt(dateParts[1]) // Tag
+          );
+          const days = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+          const dayIndex = date.getDay();
+          // Nur Montag bis Freitag (1-5) verwenden
+          if (dayIndex >= 1 && dayIndex <= 5) {
+            day = days[dayIndex];
+          } else {
+            // Für Wochenendtage auf Montag setzen
+            day = 'Montag';
           }
         }
       }
@@ -569,7 +553,13 @@ function convertCSVToScheduleFormat(csvData, vertretungsplan) {
       // Wenn immer noch kein Tag gefunden, verwende den aktuellen Tag
       if (!day) {
         const days = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-        day = days[new Date().getDay()];
+        const dayIndex = new Date().getDay();
+        // Nur Montag bis Freitag (1-5) verwenden, sonst Montag
+        if (dayIndex >= 1 && dayIndex <= 5) {
+          day = days[dayIndex];
+        } else {
+          day = 'Montag';
+        }
       }
       
       // Initialisiere Gruppe falls noch nicht vorhanden
@@ -663,7 +653,16 @@ function convertCSVToScheduleFormat(csvData, vertretungsplan) {
       
       // Bestimme den Wochentag
       const days = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-      const dayName = days[date.getDay()];
+      const dayIndex = date.getDay();
+      
+      // Überspringe Termine am Wochenende oder verschiebe sie auf Montag
+      let dayName;
+      if (dayIndex === 0 || dayIndex === 6) {
+        console.log(`Termin fällt auf Wochenende, verschiebe auf Montag: ${dateStr} - ${entry.Titel}`);
+        dayName = 'Montag';
+      } else {
+        dayName = days[dayIndex];
+      }
       
       // Formatiere die Uhrzeit, falls vorhanden
       let timeStr = '';
