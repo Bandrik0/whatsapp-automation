@@ -1,0 +1,30 @@
+2025/05/06-13:36:39.944 b903 Reusing MANIFEST /Users/beitkhalaf/Desktop/whp/whatsapp-notifier/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/05/06-13:36:39.944 b903 Recovering log #524
+2025/05/06-13:36:39.984 b903 Reusing old log /Users/beitkhalaf/Desktop/whp/whatsapp-notifier/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000524.log 
+2025/05/06-13:36:41.866 a103 Level-0 table #532: started
+2025/05/06-13:36:41.878 a103 Level-0 table #532: 519224 bytes OK
+2025/05/06-13:36:41.885 a103 Delete type=0 #524
+2025/05/06-13:36:41.886 a103 Manual compaction at level-0 from '\x00\x8b\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x8c\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/05/06-13:36:41.889 1e303 Level-0 table #534: started
+2025/05/06-13:36:41.892 1e303 Level-0 table #534: 447 bytes OK
+2025/05/06-13:36:41.898 1e303 Delete type=0 #531
+2025/05/06-13:36:41.898 1e303 Manual compaction at level-0 from '\x00\x8c\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x8d\x00\x00\x00' @ 0 : 0; will stop at '\x00\x8c\x00\x00\x05' @ 1420519 : 0
+2025/05/06-13:36:41.899 1e303 Compacting 1@0 + 1@1 files
+2025/05/06-13:36:41.914 1e303 Generated table #535@0: 13344 keys, 264062 bytes
+2025/05/06-13:36:41.914 1e303 Compacted 1@0 + 1@1 files => 264062 bytes
+2025/05/06-13:36:41.919 1e303 compacted to: files[ 0 1 4 0 0 0 0 ]
+2025/05/06-13:36:41.919 1e303 Delete type=2 #534
+2025/05/06-13:36:41.919 1e303 Manual compaction at level-0 from '\x00\x8c\x00\x00\x05' @ 1420519 : 0 .. '\x00\x8d\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/05/06-13:36:43.230 f503 Compacting 1@1 + 4@2 files
+2025/05/06-13:36:43.263 f503 Generated table #536@1: 24552 keys, 2184116 bytes
+2025/05/06-13:36:43.284 f503 Generated table #537@1: 3213 keys, 2150181 bytes
+2025/05/06-13:36:43.312 f503 Generated table #538@1: 13478 keys, 2169643 bytes
+2025/05/06-13:36:43.368 f503 Generated table #539@1: 54221 keys, 2223440 bytes
+2025/05/06-13:36:43.368 f503 Compacted 1@1 + 4@2 files => 8727380 bytes
+2025/05/06-13:36:43.376 f503 compacted to: files[ 0 0 4 0 0 0 0 ]
+2025/05/06-13:36:43.376 f503 Delete type=2 #528
+2025/05/06-13:36:43.376 f503 Delete type=2 #529
+2025/05/06-13:36:43.376 f503 Delete type=2 #527
+2025/05/06-13:36:43.376 f503 Delete type=2 #526
+2025/05/06-13:36:43.376 f503 Delete type=2 #532
+2025/05/06-13:36:43.376 f503 Delete type=2 #535
