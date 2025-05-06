@@ -1,47 +1,58 @@
 {
   "Montag": {
-    "message": "Wichtige Termine im Mai:",
+    "message": "📅 *TERMINÜBERSICHT FÜR DIESE WOCHE* 📅",
     "subjects": [
-      "19.05.2025: Lernfeld 05 Klausur (8:00-13:00)",
-      "09.06.2025: Pfingstmontag (frei!)"
+      "📚 *19.05.2025:* Lernfeld 05 Klausur (8:00-13:00)",
+      "🏫 *Tipp:* Beginne rechtzeitig mit der Vorbereitung!",
+      "🎓 *09.06.2025:* Pfingstmontag (schulfrei)"
     ]
   },
   "Dienstag": {
-    "message": "Wichtige Termine nach dem 6. Mai:",
+    "message": "📚 *ANSTEHENDE KLAUSUREN* 📝",
     "subjects": [
-      "13.05.2025: Deutschklausur (8:00-9:30) in R 34",
-      "27.05.2025: Lernfeld 01 Klausur (11:30-13:00)"
+      "📖 *13.05.2025:* Deutschklausur (8:00-9:30) in Raum 34",
+      "💻 *27.05.2025:* Lernfeld 01 Klausur (11:30-13:00)",
+      "⏰ *Denk dran:* Unterlagen vollständig mitbringen!"
     ]
   },
   "Mittwoch": {
-    "message": "Keine Termine im Mai",
+    "message": "🌟 *MITTE DER WOCHE* 🌟",
     "subjects": [
-      "Nächste Woche steht keine Klausur an"
+      "📝 Diese Woche stehen keine Klausuren am Mittwoch an",
+      "🔍 *Tipp:* Nutze den Tag für Wiederholungen!",
+      "📚 Denk an die Hausaufgaben für morgen"
     ]
   },
   "Donnerstag": {
-    "message": "Feiertage nach dem 6. Mai:",
+    "message": "🗓️ *KOMMENDE FEIERTAGE* 🎉",
     "subjects": [
-      "29.05.2025: Christi Himmelfahrt (frei!)",
-      "19.06.2025: Fronleichnam (frei!)"
+      "🎊 *29.05.2025:* Christi Himmelfahrt (schulfrei)",
+      "🎊 *19.06.2025:* Fronleichnam (schulfrei)",
+      "⚠️ *Hinweis:* Plane deine Lernzeiten entsprechend!"
     ]
   },
   "Freitag": {
-    "message": "Klausuren im Mai:",
+    "message": "📝 *FREITAGS-KLAUSUREN IM MAI* 📝",
     "subjects": [
-      "16.05.2025: Lernfeld 02 Klausur (9:45-11:15)",
-      "23.05.2025: Lernfeld 02 Klausur (9:45-11:15)"
+      "💻 *16.05.2025:* Lernfeld 02 Klausur (9:45-11:15)",
+      "💻 *23.05.2025:* Lernfeld 02 Klausur (9:45-11:15)",
+      "🏁 *Wochenende:* Fast geschafft! Halte durch!"
     ]
   },
   "Samstag": {
-    "message": "Wochenende! Keine Schule",
-    "subjects": []
+    "message": "🎉 *WOCHENENDE!* 🎉",
+    "subjects": [
+      "🛌 Keine Schule heute",
+      "📚 Gute Zeit zum Lernen oder Erholen",
+      "🎮 Genieße deinen freien Tag!"
+    ]
   },
   "Sonntag": {
-    "message": "Wochenende! Morgen wieder Schule",
+    "message": "🔄 *WOCHE VORAUSPLANEN* 📆",
     "subjects": [
-      "08.06.2025: Pfingstsonntag (frei!)",
-      "Denk an die Hausaufgaben für morgen!"
+      "🌞 *08.06.2025:* Pfingstsonntag",
+      "🎒 Bereite deine Schultasche für morgen vor!",
+      "📝 Checke alle Hausaufgaben für die kommende Woche"
     ]
   }
 } 
