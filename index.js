@@ -5,7 +5,7 @@ const path = require('path');
 
 // Gruppenchat-ID (muss nach Authentifizierung aktualisiert werden)
 // Format ist normalerweise so: "49123456789-1234567890@g.us"
-const GRUPPENID = 'HIER_GRUPPE_ID_EINFÜGEN';
+const GRUPPENID = '120363327832370193@g.us';
 
 // Funktion zum Laden des Stundenplans
 function getSchedule() {
