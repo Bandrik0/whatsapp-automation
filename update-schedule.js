@@ -499,31 +499,31 @@ function convertCSVToScheduleFormat(csvData, vertretungsplan) {
   // Erstelle ein Grundgerüst der schedule.json
   const schedule = {
     "Montag": {
-      "message": "📅 *TERMINÜBERSICHT FÜR DIESE WOCHE* 📅",
+      "message": "📅 *TERMINE DIESE WOCHE* 📆",
       "subjects": []
     },
     "Dienstag": {
-      "message": "📚 *ANSTEHENDE KLAUSUREN* 📝",
+      "message": "📚 *AKTUELLE TERMINE & KLAUSUREN* 📝",
       "subjects": []
     },
     "Mittwoch": {
-      "message": "🌟 *MITTE DER WOCHE* 🌟",
+      "message": "🌟 *AKTUELLE TERMINE & INFOS* 📋",
       "subjects": []
     },
     "Donnerstag": {
-      "message": "🗓️ *KOMMENDE FEIERTAGE* 🎉",
+      "message": "🗓️ *WICHTIGE TERMINE & FEIERTAGE* 🎉",
       "subjects": []
     },
     "Freitag": {
-      "message": "📝 *FREITAGS-KLAUSUREN* 📝",
+      "message": "📝 *WOCHENABSCHLUSS & KOMMENDE TERMINE* 📆",
       "subjects": []
     },
     "Samstag": {
-      "message": "🎉 *WOCHENENDE!* 🎉",
+      "message": "🎉 *WOCHENENDE & AUSBLICK* 📌",
       "subjects": []
     },
     "Sonntag": {
-      "message": "🔄 *WOCHE VORAUSPLANEN* 📆",
+      "message": "🔄 *VORSCHAU AUF DIE KOMMENDE WOCHE* 📋",
       "subjects": []
     }
   };
@@ -647,6 +647,20 @@ function convertCSVToScheduleFormat(csvData, vertretungsplan) {
         parseInt(dateStr.split('.')[0]) // Tag
       );
       
+      // Filtere nur aktuelle und zukünftige Termine
+      const heute = new Date();
+      // Setze die Zeit auf 00:00:00 für korrekten Datumsvergleich
+      heute.setHours(0, 0, 0, 0);
+      
+      // Überspringe Termine, die mehr als 7 Tage in der Vergangenheit liegen
+      const sieben_tage_zuvor = new Date(heute);
+      sieben_tage_zuvor.setDate(heute.getDate() - 7);
+      
+      if (date < sieben_tage_zuvor) {
+        console.log(`Überspringe Termin in der Vergangenheit: ${dateStr} - ${entry.Titel}`);
+        continue;
+      }
+      
       // Bestimme den Wochentag
       const days = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
       const dayName = days[date.getDay()];
@@ -657,15 +671,18 @@ function convertCSVToScheduleFormat(csvData, vertretungsplan) {
         timeStr = ` (${entry.Von_Uhrzeit}-${entry.Bis_Uhrzeit})`;
       }
       
-      // Formatiere den Eintrag je nach Art
+      // Formatiere das Datum im Format TT.MM.YYYY
+      const formattedDateStr = `${dateStr.padStart(10, '0')}`;
+      
+      // Formatiere den Eintrag je nach Art mit besserem Datum und Zeit
       let formattedEntry = '';
       
       if (entry.Art === 'Klausuren' || entry.Titel.toLowerCase().includes('klausur')) {
-        formattedEntry = `📝 *${dateStr}${timeStr}:* ${entry.Titel}`;
+        formattedEntry = `📝 *${formattedDateStr}${timeStr}:* ${entry.Titel}`;
       } else if (entry.Art === 'Ferien & freie Tage' || entry.Titel.toLowerCase().includes('ferien') || entry.Titel.toLowerCase().includes('frei')) {
-        formattedEntry = `🎊 *${dateStr}:* ${entry.Titel} (schulfrei)`;
+        formattedEntry = `🎊 *${formattedDateStr}:* ${entry.Titel} (schulfrei)`;
       } else {
-        formattedEntry = `📌 *${dateStr}${timeStr}:* ${entry.Titel}`;
+        formattedEntry = `📌 *${formattedDateStr}${timeStr}:* ${entry.Titel}`;
       }
       
       // Füge Beschreibung und Ort hinzu, wenn vorhanden
@@ -685,6 +702,28 @@ function convertCSVToScheduleFormat(csvData, vertretungsplan) {
       }
     } catch (error) {
       console.error(`Fehler beim Verarbeiten eines Eintrags: ${error.message}`, entry);
+    }
+  }
+  
+  // Sortiere die Termine nach Datum (extrahiere Datum aus den formatierten Einträgen)
+  for (const day in schedule) {
+    if (schedule[day].subjects.length > 0) {
+      schedule[day].subjects.sort((a, b) => {
+        // Extrahiere Datum aus den Einträgen (Format: "📝 *01.01.2025 (08:00-09:30):* Titel")
+        const getDateFromEntry = (entry) => {
+          const match = entry.match(/\*(\d{2}\.\d{2}\.\d{4})/);
+          if (match && match[1]) {
+            const [day, month, year] = match[1].split('.');
+            return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+          }
+          return new Date(0); // Fallback
+        };
+        
+        const dateA = getDateFromEntry(a);
+        const dateB = getDateFromEntry(b);
+        
+        return dateA - dateB;
+      });
     }
   }
   
@@ -719,6 +758,33 @@ async function updateSchedule() {
     
     // Konvertiere die Daten ins richtige Format
     const scheduleData = convertCSVToScheduleFormat(csvData, vertretungsplanData);
+    
+    // Prüfe, ob aktuelle Termine gefunden wurden
+    let termineGefunden = false;
+    
+    for (const day in scheduleData) {
+      if (scheduleData[day].subjects.length > 0) {
+        const filteredSubjects = scheduleData[day].subjects.filter(
+          entry => !entry.includes('-------------------------') && 
+                  !entry.includes('VERTRETUNGEN HEUTE')
+        );
+        
+        if (filteredSubjects.length > 0) {
+          termineGefunden = true;
+          break;
+        }
+      }
+    }
+    
+    // Wenn keine aktuellen Termine gefunden wurden, füge Hinweis hinzu
+    if (!termineGefunden) {
+      console.log('Keine aktuellen Termine gefunden!');
+      // Füge Hinweis zu jedem Tag hinzu
+      for (const day in scheduleData) {
+        scheduleData[day].subjects.push('⚠️ *Für die aktuelle Woche sind keine Termine eingetragen.*');
+        scheduleData[day].subjects.push('🔍 *Bitte überprüfe das Schulportal für aktuelle Informationen.*');
+      }
+    }
     
     // Speichere die Daten
     fs.writeFileSync(OUTPUT_FILE, JSON.stringify(scheduleData, null, 2));
