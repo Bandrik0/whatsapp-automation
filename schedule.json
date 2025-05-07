@@ -8,6 +8,7 @@
       "📝 *19.05.2025 (08:00-13:00):* Lernfeld 05 11 - 12 (11bfi0, 12bfi0) Klausur - Klausur in Lernfeld 05 11 - 12 (11bfi0, 12bfi0) (112LF0533-BFSM/INVE/OHNE)",
       "📌 *26.05.2025:* B-Woche (22.) - Bei der 22. Woche handelt es sich um eine B-Woche.",
       "📌 *02.06.2025:* A-Woche (23.) - Bei der 23. Woche handelt es sich um eine A-Woche.",
+      "🎊 *08.06.2025:* Pfingstsonntag (schulfrei)",
       "📌 *09.06.2025:* B-Woche (24.) - Bei der 24. Woche handelt es sich um eine B-Woche.",
       "🎊 *09.06.2025:* Pfingstmontag (schulfrei)",
       "📌 *16.06.2025:* A-Woche (25.) - Bei der 25. Woche handelt es sich um eine A-Woche.",
@@ -44,16 +45,6 @@
     "subjects": [
       "📝 *16.05.2025 (09:45-11:15):* Lernfeld 02 11 - 12 (11bfi0, 12bfi0) Klausur - Klausur in Lernfeld 02 11 - 12 (11bfi0, 12bfi0) (112LF0219-BFSM/INVE/OHNE)",
       "📝 *23.05.2025 (09:45-11:15):* Lernfeld 02 11 - 12 (11bfi0, 12bfi0) Klausur - Klausur in Lernfeld 02 11 - 12 (11bfi0, 12bfi0) (112LF0219-BFSM/INVE/OHNE)"
-    ]
-  },
-  "Samstag": {
-    "message": "🎉 *WOCHENENDE & AUSBLICK* 📌",
-    "subjects": []
-  },
-  "Sonntag": {
-    "message": "🔄 *VORSCHAU AUF DIE KOMMENDE WOCHE* 📋",
-    "subjects": [
-      "🎊 *08.06.2025:* Pfingstsonntag (schulfrei)"
     ]
   }
 }
