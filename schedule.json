@@ -19,9 +19,7 @@
   },
   "Donnerstag": {
     "message": "🗓️ *WICHTIGE TERMINE & FEIERTAGE* 🎉",
-    "subjects": [
-      "🎊 *19.06.2025:* Fronleichnam (schulfrei)"
-    ]
+    "subjects": []
   },
   "Freitag": {
     "message": "📝 *WOCHENABSCHLUSS & KOMMENDE TERMINE* 📆",
