@@ -2,23 +2,36 @@
   "Montag": {
     "message": "📅 *TERMINE DIESE WOCHE* 📆",
     "subjects": [
-      "📌 *21.07.2025:* B-Woche (30.) - Bei der 30. Woche handelt es sich um eine B-Woche."
+      "⚠️ *Für die aktuelle Woche sind keine Termine eingetragen.*",
+      "🔍 *Bitte überprüfe das Schulportal für aktuelle Informationen.*"
     ]
   },
   "Dienstag": {
     "message": "📚 *AKTUELLE TERMINE & KLAUSUREN* 📝",
-    "subjects": []
+    "subjects": [
+      "⚠️ *Für die aktuelle Woche sind keine Termine eingetragen.*",
+      "🔍 *Bitte überprüfe das Schulportal für aktuelle Informationen.*"
+    ]
   },
   "Mittwoch": {
     "message": "🌟 *AKTUELLE TERMINE & INFOS* 📋",
-    "subjects": []
+    "subjects": [
+      "⚠️ *Für die aktuelle Woche sind keine Termine eingetragen.*",
+      "🔍 *Bitte überprüfe das Schulportal für aktuelle Informationen.*"
+    ]
   },
   "Donnerstag": {
     "message": "🗓️ *WICHTIGE TERMINE & FEIERTAGE* 🎉",
-    "subjects": []
+    "subjects": [
+      "⚠️ *Für die aktuelle Woche sind keine Termine eingetragen.*",
+      "🔍 *Bitte überprüfe das Schulportal für aktuelle Informationen.*"
+    ]
   },
   "Freitag": {
     "message": "📝 *WOCHENABSCHLUSS & KOMMENDE TERMINE* 📆",
-    "subjects": []
+    "subjects": [
+      "⚠️ *Für die aktuelle Woche sind keine Termine eingetragen.*",
+      "🔍 *Bitte überprüfe das Schulportal für aktuelle Informationen.*"
+    ]
   }
 }
